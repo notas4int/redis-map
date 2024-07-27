@@ -32,7 +32,7 @@ public class RedisMap implements Map<String, String> {
     @Override
     public String put(String key, String value) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.set(key, value);
+            return jedis.setGet(key, value);
         } catch (JedisException e) {
             throw new JedisConnectionException();
         }
