@@ -1,8 +1,10 @@
 package org.example;
 
+import org.example.exceptions.JedisConnectionException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,6 +24,8 @@ public class RedisMap implements Map<String, String> {
     public String get(Object key) {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.get((String) key);
+        } catch (JedisException e) {
+            throw new JedisConnectionException();
         }
     }
 
@@ -29,6 +33,8 @@ public class RedisMap implements Map<String, String> {
     public String put(String key, String value) {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.set(key, value);
+        } catch (JedisException e) {
+            throw new JedisConnectionException();
         }
     }
 
